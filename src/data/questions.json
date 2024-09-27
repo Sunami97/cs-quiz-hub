@@ -1,0 +1,59 @@
+{
+    "MultipleQuestion": [
+        {
+            "question": "리액트에서 컴포넌트의 생명주기를 관리하기 위한 메서드는 무엇인가요?",
+            "options": [
+                "render()",
+                "componentDidMount()",
+                "getInitialState()",
+                "shouldComponentUpdate()"
+            ],
+            "answer": "componentDidMount()",
+            "commentary": "componentDidMount() 메서드는 컴포넌트가 마운트된 후에 호출되며, 중요한 초기화 작업을 수행하는 데 사용됩니다."
+        },
+        {
+            "question": "서버 사이드 렌더링(SSR)의 가장 큰 장점은 무엇인가요?",
+            "options": [
+                "초기 페이지 로딩 속도 향상",
+                "클라이언트의 데이터 관리 용이",
+                "SPA의 장점 극대화",
+                "상태 관리를 쉽게 하기"
+            ],
+            "answer": "초기 페이지 로딩 속도 향상",
+            "commentary": "SSR은 서버에서 먼저 페이지를 렌더링하여 클라이언트로 전송하므로, 사용자가 더 빠른 초기 페이지 로딩을 경험할 수 있습니다."
+        },
+        {
+            "question": "리액트 훅스의 useEffect 훅의 주요 목적은 무엇인가요?",
+            "options": [
+                "상태 관리",
+                "비동기 API 호출",
+                "컴포넌트 생명주기 관리",
+                "상수 정의"
+            ],
+            "answer": "컴포넌트 생명주기 관리",
+            "commentary": "useEffect 훅은 컴포넌트가 렌더링될 때마다 특정 작업을 수행할 수 있게 하여 생명주기를 관리하는 데 사용됩니다."
+        },
+        {
+            "question": "CSR(클라이언트 사이드 렌더링) 방식의 주된 단점은 무엇인가요?",
+            "options": [
+                "SEO 최적화의 어려움",
+                "초기 로딩 속도 향상",
+                "데이터의 동기화 용이",
+                "서버 부하 감소"
+            ],
+            "answer": "SEO 최적화의 어려움",
+            "commentary": "CSR은 클라이언트에서 자바스크립트를 통해 모든 페이지를 렌더링하기 때문에 검색 엔진 최적화에서 문제가 발생할 수 있습니다."
+        },
+        {
+            "question": "리액트에서 상태를 업데이트할 때 메서드의 비동기적 요청을 보장하는 방법은 무엇인가요?",
+            "options": [
+                "setState(useEffect)",
+                "setState() 함수",
+                "setState(promise)",
+                "setState(currentState => newState)"
+            ],
+            "answer": "setState(currentState => newState)",
+            "commentary": "setState(currentState => newState) 패턴을 사용하면 현재 상태를 기준으로 새로운 상태를 안전하게 업데이트할 수 있습니다."
+        }
+    ]
+}
