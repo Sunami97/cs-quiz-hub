@@ -32,6 +32,6 @@ const Main = styled.main`
     flex-direction: column;
     align-items: center;
     margin-top : 72px;
-    margin-bottom: 58px;
+    /* margin-bottom: 58px; */
   `;
 export default App;

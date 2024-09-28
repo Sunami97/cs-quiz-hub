@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { colors } from '../color';
 import Button from '../components/Button';
-import ScrollArea from '../components/ScrollArea';
 
 type Result = {
   question: string;
@@ -38,36 +37,34 @@ const ResultPage: React.FC = () => {
   return (
     <ResultWrapper>
       <ResultContent>
-        <ScrollArea>
-          <Title>퀴즈 결과</Title>
-          <ResultText>{comparison.length}문제 중 {comparison.filter((comparison) => comparison).length}문제 맞히셨습니다.</ResultText>
-          <CommentaryListWrapper>
-            {reuslt.map((data, index: number) => {
-              return <CommentaryItem key={index} $isCorrect={comparison[index]}>
-                <CommentaryItemTextWrapper>
-                  <TextWrapper>
-                    <IndexText>Q{index + 1}</IndexText>
-                    <InfoText>{data.question}</InfoText>
-                  </TextWrapper>
-                  <TextWrapper>
-                    <IndexText>A{index + 1}</IndexText>
-                    {comparison[index]
-                      ? <Answer $isCorrect={comparison[index]}>{data.userAnswer}</Answer>
-                      : <div>
-                        <StrikeThrough>{data.userAnswer}</StrikeThrough>
-                        <Answer $isCorrect={comparison[index]}>{data.answer}</Answer>
-                      </div>
-                    }
-                  </TextWrapper>
-                  <TextWrapper>
-                    <IndexText>E{index + 1}</IndexText>
-                    <InfoText>{data.commentary}</InfoText>
-                  </TextWrapper>
-                </CommentaryItemTextWrapper>
-              </CommentaryItem>
-            })}
-          </CommentaryListWrapper>
-        </ScrollArea>
+        <Title>퀴즈 결과</Title>
+        <ResultText>{comparison.length}문제 중 {comparison.filter((comparison) => comparison).length}문제 맞히셨습니다.</ResultText>
+        <CommentaryListWrapper>
+          {reuslt.map((data, index: number) => {
+            return <CommentaryItem key={index} $isCorrect={comparison[index]}>
+              <CommentaryItemTextWrapper>
+                <TextWrapper>
+                  <IndexText>Q{index + 1}</IndexText>
+                  <CommentaryText>{data.question}</CommentaryText>
+                </TextWrapper>
+                <TextWrapper>
+                  <IndexText>A{index + 1}</IndexText>
+                  {comparison[index]
+                    ? <Answer $isCorrect={comparison[index]}>{data.userAnswer}</Answer>
+                    : <div>
+                      <StrikeThrough>{data.userAnswer}</StrikeThrough>
+                      <Answer $isCorrect={comparison[index]}>{data.answer}</Answer>
+                    </div>
+                  }
+                </TextWrapper>
+                <TextWrapper>
+                  <IndexText>E{index + 1}</IndexText>
+                  <CommentaryText>{data.commentary}</CommentaryText>
+                </TextWrapper>
+              </CommentaryItemTextWrapper>
+            </CommentaryItem>
+          })}
+        </CommentaryListWrapper>
       </ResultContent>
       <ButtonWrapper>
         <Button text='홈으로' onClick={goHome} />
@@ -78,7 +75,7 @@ const ResultPage: React.FC = () => {
 
 const ResultWrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 130px);
+  min-height: calc(100vh - 130px);
   background: ${colors.silver};
   display: flex;
   flex-direction: column;
@@ -93,11 +90,9 @@ const ResultContent = styled.div`
   margin-top: 50px;
   background: ${colors.white};
   border-radius: 24px;
-  overflow: hidden;
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   text-align: center;
 `;
 
@@ -126,7 +121,8 @@ const CommentaryItem = styled.li<{ $isCorrect: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+`;
+
 const CommentaryItemTextWrapper = styled.div`
   margin-top: 8px;
   display: flex;
@@ -155,11 +151,15 @@ const Answer = styled.span<{ $isCorrect: boolean }>`
     color: ${(props) => (props.$isCorrect ? colors.green : colors.red)};
     font-size: 1rem;
     margin-left: 8px;
+    word-break: break-word;
+    overflow-wrap: break-word; 
 `;
 
-const InfoText = styled.div`
+const CommentaryText = styled.div`
   font-size: 1rem;
   color: ${colors.grayDark};
+  word-break: break-word;
+  overflow-wrap: break-word; 
 `;
 
 const ButtonWrapper = styled.div`

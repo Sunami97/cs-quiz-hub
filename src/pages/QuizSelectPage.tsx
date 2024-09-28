@@ -113,6 +113,7 @@ const QuizSelectPage: React.FC = () => {
 const QuizSelectContainer = styled.div`
     max-width: 1200px;
     width: calc(100% - 2rem);
+    min-height: calc(100vh - 130px);;
   `;
 
 const QuizSelectWrapper = styled.div`

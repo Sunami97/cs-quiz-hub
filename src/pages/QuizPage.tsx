@@ -7,7 +7,6 @@ import { colors } from '../color';
 import activeEllipse from '../assets/img/activeEllipse.png';
 import defaultEllipse from '../assets/img/defaultEllipse.png'
 import hoverEllipse from '../assets/img/hoverEllipse.png'
-import ScrollArea from '../components/ScrollArea';
 
 type Question = {
   question: string;
@@ -86,32 +85,26 @@ const QuizPage: React.FC = () => {
   return (
     <QuizPageWrapper>
       <QuizContent>
-        <ScrollArea>
-          <ProgressContent>
-            <ProgressBar percentage={(currentQuestionIndex + 1) / questionCount * 100} />
-            <ProgressText>{currentQuestionIndex + 1}/{questionCount}</ProgressText>
-          </ProgressContent>
-          <QuizTitle>Q{currentQuestionIndex + 1}</QuizTitle>
+        <ProgressContent>
+          <ProgressBar percentage={(currentQuestionIndex + 1) / questionCount * 100} />
+          <ProgressText>{currentQuestionIndex + 1}/{questionCount}</ProgressText>
+        </ProgressContent>
+        <QuestionWrapper>
+          <QuestionIndex>Q{currentQuestionIndex + 1}</QuestionIndex>
           <QuestionText>{currentQuestion.question}</QuestionText>
-          <OptionList>
-            {currentQuestion.options.map((option, index) => (
-              <Option
-                key={index}
-                $isSelected={option === selectedOption}
-                $activeEllipse={activeEllipse}
-                $defaultEllipse={defaultEllipse}
-                $hoverEllipse={hoverEllipse}
-                onClick={() => setSelectedOption(option)}
-              >{option}</Option>
-            ))}
-          </OptionList>
-          {/* <input
-          type="text"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          placeholder="Type your answer"
-        /> */}
-        </ScrollArea>
+        </QuestionWrapper>
+        <OptionList>
+          {currentQuestion.options.map((option, index) => (
+            <Option
+              key={index}
+              $isSelected={option === selectedOption}
+              $activeEllipse={activeEllipse}
+              $defaultEllipse={defaultEllipse}
+              $hoverEllipse={hoverEllipse}
+              onClick={() => setSelectedOption(option)}
+            >{option}</Option>
+          ))}
+        </OptionList>
       </QuizContent>
       <ButtonWrapper>
         <Button text='이전' color={colors.grayPale} onClick={prevQuestion} />
@@ -123,7 +116,7 @@ const QuizPage: React.FC = () => {
 
 const QuizPageWrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 130px);
+  min-height: calc(100vh - 130px);
   background: ${colors.silver};
   display: flex;
   flex-direction: column;
@@ -142,7 +135,6 @@ const QuizContent = styled.div`
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
 `;
 
 const ProgressContent = styled.div`
@@ -157,16 +149,21 @@ const ProgressText = styled.span`
   font-size: 1rem;
 `;
 
-const QuizTitle = styled.h2`
-  font-size: 1.5rem;
-  color: ${colors.grayPale};
-  margin-top: 8px;
+const QuestionWrapper = styled.div`
+margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 `;
 
-const QuestionText = styled.h2`
-  font-size: 1.25rem;
+const QuestionIndex = styled.h2`
+  font-size: 1.5rem;
+  color: ${colors.grayPale};
+`;
+
+const QuestionText = styled.span`
   color: ${colors.grayDark};
-  margin-top: 2.5rem;
+  font-size: 1.25rem;
 `
 const OptionList = styled.ul`
   list-style-type: none;
@@ -175,7 +172,7 @@ const OptionList = styled.ul`
 
 const Option = styled.li<{ $isSelected: boolean, $activeEllipse: string, $defaultEllipse: string, $hoverEllipse: string }>`
   min-width: 200px;
-  color: ${colors.grayDark};
+  color: ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayDark)};
   padding: 16px 24px;
   border: 1px solid ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayPale)};
   border-radius: 8px;
@@ -195,6 +192,7 @@ const Option = styled.li<{ $isSelected: boolean, $activeEllipse: string, $defaul
     background-repeat: no-repeat;
     background-position: right 24px center;
     background-size: 28px;
+    transform: scale(1.025);
   } 
 `;
 
