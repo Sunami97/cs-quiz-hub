@@ -3,32 +3,37 @@ import closeButton from '../../assets/img/close-button.png'
 import Button from '../Button';
 import CustomSelect from '../CustomSelect';
 import { colors } from '../../color.ts';
+import { Difficulty, QuestionCount, QuestionType } from '../../types/QuizType.ts'
 
 type Options = {
-    difficulty: string[];
-    questionCount: string[];
-    questionType: string[];
+    difficulty: Difficulty[];
+    questionCount: QuestionCount[];
+    questionType: QuestionType[];
 }
 
 interface QuizOptionsModalProps {
     options: Options;
-    difficulty: string;
-    questionCount: string;
-    questionType: string;
-    setDifficulty: React.Dispatch<React.SetStateAction<string>>;
-    setQuestionCount: React.Dispatch<React.SetStateAction<string>>;
-    setQuestionType: React.Dispatch<React.SetStateAction<string>>;
+    difficulty: Difficulty;
+    questionCount: QuestionCount;
+    questionType: QuestionType;
+    setDifficulty: React.Dispatch<React.SetStateAction<Difficulty>>;
+    setQuestionCount: React.Dispatch<React.SetStateAction<QuestionCount>>;
+    setQuestionType: React.Dispatch<React.SetStateAction<QuestionType>>;
     onClose: () => void;
     createQuiz: () => void;
 }
 
 const QuizOptionsModal: React.FC<QuizOptionsModalProps> = ({ options, difficulty, questionCount, questionType, setDifficulty, setQuestionCount, setQuestionType, onClose, createQuiz }) => {
-    const handleDifficultySelect = (option: string) => {
-        setDifficulty(option);
+    const handleDifficultySelect = (input: string) => {
+        if (input === "상" || input === "중" || input === "하") {
+            setDifficulty(input);
+        }
     };
 
-    const handleQuestionCountSelect = (option: string) => {
-        setQuestionCount(option);
+    const handleQuestionCountSelect = (input: string) => {
+        if (input === "5" || input === "10" || input === "15") {
+            setQuestionCount(input);
+        }
     };
 
     return (

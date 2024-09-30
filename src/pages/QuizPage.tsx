@@ -7,26 +7,19 @@ import { colors } from '../color';
 import activeEllipse from '../assets/img/activeEllipse.png';
 import defaultEllipse from '../assets/img/defaultEllipse.png'
 import hoverEllipse from '../assets/img/hoverEllipse.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle } from '@fortawesome/free-regular-svg-icons'
+import { faX } from '@fortawesome/free-solid-svg-icons'
+import { Quiz, MultipleChoice } from '../types/QuizType'
 
-type Question = {
-  question: string;
-  options: string[];
-  answer: string;
-  commentary: string;
-};
-
-type MultipleQuestionData = {
-  MultipleQuestion: Question[];
-};
 
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const quizData: MultipleQuestionData = location.state;
+  const quizData: Quiz = location.state;
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const questionCount: number = quizData.MultipleQuestion.length;
-  const currentQuestion: Question = quizData.MultipleQuestion[currentQuestionIndex];
+  const questionCount: number = quizData.Item.length;
 
   const [selectedOption, setSelectedOption] = useState<string>('');
 
@@ -39,7 +32,7 @@ const QuizPage: React.FC = () => {
     }
 
     const result = userAnswer.map((userAnswer, index) => {
-      const questionData = quizData.MultipleQuestion[index];
+      const questionData = quizData.Item[index];
 
       return {
         question: questionData.question,
@@ -82,6 +75,47 @@ const QuizPage: React.FC = () => {
     setCurrentQuestionIndex(prevIndex);
   }
 
+  const renderQuiz = (quiz: Quiz): JSX.Element => {
+    switch (quiz.Type) {
+      case "객관식":
+        return <OptionList>
+          {(quizData.Item as MultipleChoice[])[currentQuestionIndex].options.map((option, index) => (
+            <Option
+              key={index}
+              $isSelected={option === selectedOption}
+              $activeEllipse={activeEllipse}
+              $defaultEllipse={defaultEllipse}
+              $hoverEllipse={hoverEllipse}
+              onClick={() => setSelectedOption(option)}
+            >{option}
+            </Option>
+          ))}
+        </OptionList>
+
+      case "참 또는 거짓":
+        return <TrueOrFalseContainer>
+          <TrueOrFalseSelectBox
+            $isSelected={'O' === selectedOption}
+            onClick={() => setSelectedOption('O')}>
+            <FontAwesomeIcon icon={faCircle} />
+          </TrueOrFalseSelectBox>
+          <TrueOrFalseSelectBox
+            $isSelected={'X' === selectedOption}
+            onClick={() => setSelectedOption('X')}>
+            <FontAwesomeIcon icon={faX} />
+          </TrueOrFalseSelectBox>
+        </TrueOrFalseContainer>
+
+      case "빈칸 채우기":
+        return <FillBlankContainer>
+
+        </FillBlankContainer>
+
+      default:
+        return <p>Invalid quiz type</p>;
+    }
+  };
+
   return (
     <QuizPageWrapper>
       <QuizContent>
@@ -91,20 +125,9 @@ const QuizPage: React.FC = () => {
         </ProgressContent>
         <QuestionWrapper>
           <QuestionIndex>Q{currentQuestionIndex + 1}</QuestionIndex>
-          <QuestionText>{currentQuestion.question}</QuestionText>
+          <QuestionText>{quizData.Item[currentQuestionIndex].question}</QuestionText>
         </QuestionWrapper>
-        <OptionList>
-          {currentQuestion.options.map((option, index) => (
-            <Option
-              key={index}
-              $isSelected={option === selectedOption}
-              $activeEllipse={activeEllipse}
-              $defaultEllipse={defaultEllipse}
-              $hoverEllipse={hoverEllipse}
-              onClick={() => setSelectedOption(option)}
-            >{option}</Option>
-          ))}
-        </OptionList>
+        {renderQuiz(quizData)}
       </QuizContent>
       <ButtonWrapper>
         <Button text='이전' color={colors.grayPale} onClick={prevQuestion} />
@@ -196,11 +219,40 @@ const Option = styled.li<{ $isSelected: boolean, $activeEllipse: string, $defaul
   } 
 `;
 
+const TrueOrFalseContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+`;
+
+const TrueOrFalseSelectBox = styled.div<{ $isSelected: boolean }>`
+ margin-top: 32px;
+  width: 340px;
+  height: 400px;
+  border: 1px solid ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayPale)};
+  border-radius: 8px;
+  transition: transform 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;
+  color: ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayPale)};
+
+  &:hover{
+    transform: scale(1.025);
+  }
+`;
+
+const FillBlankContainer = styled.div`
+  
+`;
+
 const ButtonWrapper = styled.div`
   display: flex;
   gap: 24px;
   margin: 1.5rem auto;
-`
+`;
 
 
 export default QuizPage;

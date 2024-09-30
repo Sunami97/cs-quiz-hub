@@ -4,13 +4,19 @@ import styled from 'styled-components';
 import QuizItem from '../components/QuizItem';
 import prevButton from '../assets/img/prev-button.png'
 import QuizOptionsModal from '../components/Modal/QuizOptionsModal';
-import { quizTopic } from '../types/quizTopic';
 import { colors } from '../color.ts';
 import LoadingQuiz from '../components/LoadingQuiz.tsx';
-import quizData from '../data/questions.json'
+import { QuizTopic, Difficulty, QuestionCount, QuestionType } from '../types/QuizType.ts';
+//import quizData from '../data/questions.json'
+import quizData from '../data/testData1.json'
 
+type QuizInfo = {
+  id: string;
+  name: QuizTopic;
+  description: string;
+}
 
-const quizTopics: quizTopic[] = [
+const quizTopics: QuizInfo[] = [
   { id: 'html-css', name: 'HTML / CSS', description: '웹 페이지의 구조와 콘텐츠를 정의하고 디자인과 스타일을 지정하는 기술' },
   { id: 'javascript', name: '자바스크립트', description: '객체 기반의 스크립트 프로그래밍 언어' },
   { id: 'framework-library', name: '프레임워크 및 라이브러리', description: '기본 구조와 가이드라인을 제공하여 개발을 더 쉽게 해주는 도구' },
@@ -21,33 +27,34 @@ const quizTopics: quizTopic[] = [
   { id: 'cloud-deployment', name: '클라우드와 배포', description: '인터넷을 통해 애플리케이션을 실행할 수 있는 원격 서버 기반의 서비스' },
 ];
 
-const options = {
-  difficulty: ['초급', '중급', '고급'],
-  // difficulty: ['easy', 'medium', 'hard'],
-  questionCount: ['5', '10', '20'],
-  questionType: ['객관식', 'OX 퀴즈', '빈칸 맞추기']
-  // questionType: ['multiple-choice', 'ox-quiz', 'fill-in-the-blank']
+const options: {
+  difficulty: Difficulty[],
+  questionCount: QuestionCount[],
+  questionType: QuestionType[]
+} = {
+  difficulty: ['하', '중', '상'],
+  questionCount: ['5', '10', '15'],
+  questionType: ['객관식', '참 또는 거짓', '빈칸 채우기']
 }
 
 const QuizSelectPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState<quizTopic | null>(null);
-
-  const [difficulty, setDifficulty] = useState('초급');
-  const [questionCount, setQuestionCount] = useState('5');
-  const [questionType, setQuestionType] = useState('객관식');
+  const [selectedQuiz, setSelectedQuiz] = useState<QuizTopic | null>(null);
+  const [difficulty, setDifficulty] = useState<Difficulty>('하');
+  const [questionCount, setQuestionCount] = useState<QuestionCount>('5');
+  const [questionType, setQuestionType] = useState<QuestionType>('객관식');
 
   const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleQuizSelect = (quiz: quizTopic) => {
-    setSelectedQuiz(quiz);
+  const handleQuizSelect = (quizTopic: QuizTopic) => {
+    setSelectedQuiz(quizTopic);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setDifficulty('초급');
+    setDifficulty('하');
     setQuestionCount('5');
     setQuestionType('객관식')
     setIsModalOpen(false);
@@ -85,7 +92,7 @@ const QuizSelectPage: React.FC = () => {
                 id={quiz.id}
                 title={quiz.name}
                 description={quiz.description}
-                onClick={() => handleQuizSelect(quiz)}
+                onClick={() => handleQuizSelect(quiz.name)}
               />
             ))}
           </QuizItemContainer>
