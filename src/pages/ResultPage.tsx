@@ -6,21 +6,32 @@ import Button from '../components/Button';
 
 type Result = {
   question: string;
-  answer: string;
+  answer: string | string[];
   userAnswer: string;
   commentary: string;
 }[]
 
-const checkCorrectAnswers = (reuslt: Result): boolean[] => {
-  const comparison = reuslt.map((reuslt) => {
-    if (reuslt.userAnswer === reuslt.answer) {
-      return true;
+const checkCorrectAnswers = (result: Result): boolean[] => {
+  return result.map((res) => {
+    let isCorrect = false;
+
+    if (typeof res.answer === "string") {
+      isCorrect = res.answer.trim().toLowerCase() === res.userAnswer.trim().toLowerCase();
+    } else if (Array.isArray(res.answer)) {
+      isCorrect = res.answer.some((ans) => ans.trim().toLowerCase() === res.userAnswer.trim().toLowerCase());
     }
 
-    return false;
+    return isCorrect;
   })
-
-  return comparison;
+}
+const getAnswer = (answer: string | string[]): string => {
+  if (typeof answer === "string") {
+    return answer;
+  } else if (Array.isArray(answer)) {
+    return answer.join(' / ');
+  } else {
+    return 'error';
+  }
 }
 
 const ResultPage: React.FC = () => {
@@ -53,7 +64,7 @@ const ResultPage: React.FC = () => {
                     ? <Answer $isCorrect={comparison[index]}>{data.userAnswer}</Answer>
                     : <div>
                       <StrikeThrough>{data.userAnswer}</StrikeThrough>
-                      <Answer $isCorrect={comparison[index]}>{data.answer}</Answer>
+                      <Answer $isCorrect={comparison[index]}>{getAnswer(data.answer)}</Answer>
                     </div>
                   }
                 </TextWrapper>

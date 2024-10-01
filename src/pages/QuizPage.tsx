@@ -4,12 +4,9 @@ import ProgressBar from '../components/ProgressBar';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import { colors } from '../color';
-import activeEllipse from '../assets/img/activeEllipse.png';
-import defaultEllipse from '../assets/img/defaultEllipse.png'
-import hoverEllipse from '../assets/img/hoverEllipse.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
-import { faX } from '@fortawesome/free-solid-svg-icons'
+import { faX, faCircle as faCircleSolid } from '@fortawesome/free-solid-svg-icons'
 import { Quiz, MultipleChoice } from '../types/QuizType'
 
 
@@ -44,6 +41,13 @@ const QuizPage: React.FC = () => {
 
     navigate('/result', { state: result });
   }, [isQuizFinished, navigate, quizData, userAnswer]);
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && selectedOption !== '') {
+      nextQuestion();
+    }
+  };
 
   const addAnswer = () => {
     setUserAnswers((prevAnswers) => {
@@ -80,19 +84,20 @@ const QuizPage: React.FC = () => {
       case "객관식":
         return <OptionList>
           {(quizData.Item as MultipleChoice[])[currentQuestionIndex].options.map((option, index) => (
-            <Option
+            <OptionContainer
               key={index}
               $isSelected={option === selectedOption}
-              $activeEllipse={activeEllipse}
-              $defaultEllipse={defaultEllipse}
-              $hoverEllipse={hoverEllipse}
               onClick={() => setSelectedOption(option)}
-            >{option}
-            </Option>
+            >
+              <OptionText $isSelected={option === selectedOption}>{option}</OptionText>
+              <OptionIcon $isSelected={option === selectedOption}>
+                <FontAwesomeIcon icon={option === selectedOption ? faCircleSolid : faCircle} />
+              </OptionIcon>
+            </OptionContainer>
           ))}
         </OptionList>
 
-      case "참 또는 거짓":
+      case "OX 퀴즈":
         return <TrueOrFalseContainer>
           <TrueOrFalseSelectBox
             $isSelected={'O' === selectedOption}
@@ -107,9 +112,11 @@ const QuizPage: React.FC = () => {
         </TrueOrFalseContainer>
 
       case "빈칸 채우기":
-        return <FillBlankContainer>
-
-        </FillBlankContainer>
+        return <FillBlankInput
+          value={selectedOption}
+          onChange={(e) => setSelectedOption(e.target.value)}
+          $isSelected={selectedOption !== ''}
+          onKeyDown={handleKeyDown} />
 
       default:
         return <p>Invalid quiz type</p>;
@@ -193,59 +200,86 @@ const OptionList = styled.ul`
   margin-top: 16px;
  `;
 
-const Option = styled.li<{ $isSelected: boolean, $activeEllipse: string, $defaultEllipse: string, $hoverEllipse: string }>`
+const OptionContainer = styled.li<{ $isSelected: boolean }>`
   min-width: 200px;
-  color: ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayDark)};
   padding: 16px 24px;
-  border: 1px solid ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayPale)};
+  border: 1px solid ${({ $isSelected }) => ($isSelected ? colors.primary : colors.grayPale)};
   border-radius: 8px;
   margin-top: 24px;
   overflow: auto;
   cursor: pointer;
-  font-size: 1rem;
   transition: transform 0.2s;
-    
-  background: url(${(props) => props.$isSelected ? props.$activeEllipse : props.$defaultEllipse});
-  background-repeat: no-repeat;
-  background-position: right 24px center;
-  background-size: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  color: ${({ $isSelected }) => ($isSelected ? colors.primary : colors.grayDark)};
 
   &:hover {
-    background: url(${(props) => props.$isSelected ? props.$activeEllipse : props.$hoverEllipse});
-    background-repeat: no-repeat;
-    background-position: right 24px center;
-    background-size: 28px;
     transform: scale(1.025);
   } 
 `;
 
+const OptionText = styled.span<{ $isSelected: boolean }>`
+  font-size: 1rem;
+`
+
+const OptionIcon = styled.div<{ $isSelected: boolean }>`
+  color: ${({ $isSelected }) => ($isSelected ? colors.primary : colors.grayPale)};
+  font-size: 1.25rem;
+`;
+
 const TrueOrFalseContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+  }
 `;
 
 const TrueOrFalseSelectBox = styled.div<{ $isSelected: boolean }>`
  margin-top: 32px;
-  width: 340px;
-  height: 400px;
-  border: 1px solid ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayPale)};
+ padding: 10rem 5rem;
+  border: 1px solid ${({ $isSelected }) => ($isSelected ? colors.primary : colors.grayPale)};
   border-radius: 8px;
   transition: transform 0.2s;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 5rem;
-  color: ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayPale)};
+  color: ${({ $isSelected }) => ($isSelected ? colors.primary : colors.grayPale)};
 
   &:hover{
     transform: scale(1.025);
   }
+
+  @media (max-width: 768px) {
+    padding: 7rem 2.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 5rem 2.5rem;
+  }
 `;
 
-const FillBlankContainer = styled.div`
-  
+const FillBlankInput = styled.input<{ $isSelected: boolean }>`
+  margin-top: 32px;
+  padding: 1.5rem 1rem;
+  border: 1px solid ${({ $isSelected }) => ($isSelected ? colors.primaryLighter : colors.grayPale)};
+  border-radius: 8px;
+  color: ${colors.grayDark};
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: ${colors.primaryLighter};
+  }
 `;
 
 const ButtonWrapper = styled.div`

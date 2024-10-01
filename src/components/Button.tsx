@@ -7,29 +7,33 @@ type ButtonProps = {
   onClick: () => void;
   disabled?: boolean;
   color?: string;
+  textColor?: string;
 };
 
-const Button: React.FC<ButtonProps> = ({ text, onClick, disabled, color }) => {
+const Button: React.FC<ButtonProps> = ({ text, onClick, disabled, color, textColor }) => {
   return (
-    <StyledButton onClick={onClick} disabled={disabled} color={color}>
+    <StyledButton onClick={onClick} disabled={disabled} color={color} $textColor={textColor}>
       {text}
     </StyledButton>
   );
 };
 
-const StyledButton = styled.button<{ color?: string }>`
+const StyledButton = styled.button<{ color?: string, $textColor?: string }>`
   padding: 8px 24px;
   background-color: ${({ color }) => (color ? color : colors.primary)};
-  color: ${colors.white};
+  color: ${({ $textColor }) => ($textColor ? $textColor : colors.white)};
   border: none;
   border-radius: 24px;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+  transition: transform 0.2s;
 
   &:hover {
     background-color: ${({ color }) => (color ? 'darken(0.1, color)' : colors.primaryDark)};
+    transform: scale(1.05);
   }
 `;
 

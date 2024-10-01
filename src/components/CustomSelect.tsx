@@ -92,12 +92,12 @@ const DropdownList = styled.ul`
 const DropdownListItem = styled.li<{ selected: boolean }>`
   padding: 10px;
   background-color: ${(props) => (props.selected ? colors.primaryPale : colors.white)};
-  color: ${(props) => (props.selected ? colors.primary : colors.grayLighter)};
+  color: ${(props) => (props.selected ? colors.primaryDark : colors.grayLighter)};
   cursor: pointer;
 
   &:hover {
     background-color: ${(props) => (props.selected ? colors.primaryPale : colors.silver)};
-    color: ${(props) => (props.selected ? colors.primary : colors.grayLighter)};
+    color: ${(props) => (props.selected ? colors.primaryDark : colors.grayLighter)};
   }
 `;
 

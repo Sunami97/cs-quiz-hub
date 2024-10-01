@@ -137,7 +137,7 @@ const StyledButton = styled.button <{ $isSelected: boolean }> `
     border-radius: 24px;
     border: none;
     background-color: ${({ $isSelected }) => ($isSelected ? colors.primaryPale : colors.silver)};
-    color: ${({ $isSelected }) => ($isSelected ? colors.primary : colors.grayLighter)};
+    color: ${({ $isSelected }) => ($isSelected ? colors.primaryDark : colors.grayLighter)};
     cursor: pointer;
     transition: transform 0.2s;
 

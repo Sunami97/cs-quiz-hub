@@ -20,7 +20,7 @@ const HomePage: React.FC = () => {
           CS Skills
         </MainTitle>
         <SubTitle>CSQuizHub에서 CS지식을 재미있는 퀴즈로 쉽게 배우고 즐겨보세요!</SubTitle>
-        <Button text="시작하기" onClick={startQuiz} color={colors.black} />
+        <Button text="시작하기" onClick={startQuiz} color={colors.lightLemonYellow} textColor={colors.primary} />
       </TopContent>
       <QuizWrap>
       </QuizWrap>
@@ -52,6 +52,7 @@ const HomeContainer = styled.div`
 `;
 
 const TopContent = styled.div`
+  width: calc(100% - 2rem);
   position: relative;
   z-index: 10;
 `;

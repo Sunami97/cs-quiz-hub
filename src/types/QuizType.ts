@@ -11,7 +11,7 @@ export type QuizTopic =
 
 export type Difficulty = "상" | "중" | "하";
 export type QuestionCount = "5" | "10" | "15";
-export type QuestionType = "객관식" | "빈칸 채우기" | "참 또는 거짓";
+export type QuestionType = "객관식" | "빈칸 채우기" | "OX 퀴즈";
 
 export interface QuizOption {
     topic: QuizTopic;
@@ -29,7 +29,7 @@ export interface MultipleChoice {
 
 export interface TrueOrFalse {
     question: string;
-    answer: boolean;
+    answer: string;
     commentary: string;
 }
 

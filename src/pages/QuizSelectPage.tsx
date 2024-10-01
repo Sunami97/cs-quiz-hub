@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import QuizItem from '../components/QuizItem';
-import prevButton from '../assets/img/prev-button.png'
 import QuizOptionsModal from '../components/Modal/QuizOptionsModal';
 import { colors } from '../color.ts';
 import LoadingQuiz from '../components/LoadingQuiz.tsx';
 import { QuizTopic, Difficulty, QuestionCount, QuestionType } from '../types/QuizType.ts';
-//import quizData from '../data/questions.json'
-import quizData from '../data/testData1.json'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleLeft } from '@fortawesome/free-solid-svg-icons'
+
+import quizData from '../data/questions.json'
+//import quizData from '../data/testData1.json'
+//import quizData from '../data/testData2.json'
 
 type QuizInfo = {
   id: string;
@@ -34,7 +37,7 @@ const options: {
 } = {
   difficulty: ['하', '중', '상'],
   questionCount: ['5', '10', '15'],
-  questionType: ['객관식', '참 또는 거짓', '빈칸 채우기']
+  questionType: ['객관식', 'OX 퀴즈', '빈칸 채우기']
 }
 
 const QuizSelectPage: React.FC = () => {
@@ -82,7 +85,9 @@ const QuizSelectPage: React.FC = () => {
       ) : (
         <QuizSelectWrapper>
           <QuizSelectTopWrapper>
-            <PrevButton src={prevButton} alt="prevButton" onClick={goHome} />
+            <PrevButton onClick={goHome}>
+              <FontAwesomeIcon icon={faCircleLeft} />
+            </PrevButton>
             <QuizSelectTitle>주제 선택</QuizSelectTitle>
           </QuizSelectTopWrapper>
           <QuizItemContainer>
@@ -130,21 +135,33 @@ const QuizSelectWrapper = styled.div`
 const QuizSelectTopWrapper = styled.div`
     display: flex;
     align-items: center;
+    justify-content: start;
     margin-bottom: 25px;
-  `
 
-const PrevButton = styled.img`
-    width: 2.5rem;
-    height: 2.5rem;
+    @media (max-width: 480px) {
+      justify-content: center;
+    }
+  `;
+
+const PrevButton = styled.div`
     cursor: pointer;
-  `
+    color: ${colors.primary};
+    font-size: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1rem;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  `;
 
 const QuizSelectTitle = styled.h2`
-    width: 100%;
     font-size: 2rem;
     color: ${colors.grayDark};
     text-align: start;
-    margin-left: 24px;
   `;
 
 const QuizItemContainer = styled.div`

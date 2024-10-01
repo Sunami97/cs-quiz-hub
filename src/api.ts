@@ -27,13 +27,13 @@ const selectQuestionType = (questionType: QuestionType) => {
         }[];
       }
     `;
-  } else if (questionType === "참 또는 거짓") {
+  } else if (questionType === "OX 퀴즈") {
     promptInterface = `
       interface Quiz {
         Type: ${questionType};
         Item: {
           question: string;
-          answer: boolean;
+          answer: string;
           commentary: string;
         }[];
       }
@@ -87,8 +87,8 @@ const createQuizPrompt = (
       - 의미가 동일한 단어(예: '자원'과 'resource', '인가'와 'Authorization')를 각각 개별 요소로 구분하여 **answers 배열**에 포함해 주세요. 예를 들어, "['자원', 'resource']"와 같이 입력.
       - JSON 형식에서는 한글과 영어로 된 정답을 분리해서 배열에 넣어 주세요. 동일한 의미를 가진 단어라도, 한글과 영어를 개별로 포함해 주세요.`
         : `
-        **참 또는 거짓 문제의 경우**
-        정답은 참은 O 거짓은 X로 넣어주세요`
+      - **OX 퀴즈 문제의 경우**
+      - 질문이 참이면 "O" 거짓이면 "X"를 answer에 넣어주세요`
     }
     
     문제는 인터페이스 구조에 맞추어 정답을 포함하고, 추가적인 설명이나 불필요한 텍스트는 출력하지 마세요. 정답에 대한 간단히 해설을 commentary 변수에 포함해 주세요.
