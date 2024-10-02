@@ -5,13 +5,10 @@ import QuizItem from '../components/QuizItem';
 import QuizOptionsModal from '../components/Modal/QuizOptionsModal';
 import { colors } from '../color.ts';
 import LoadingQuiz from '../components/LoadingQuiz.tsx';
-import { QuizTopic, Difficulty, QuestionCount, QuestionType } from '../types/QuizType.ts';
+import { QuizTopic, Difficulty, QuestionCount, QuestionType, QuizOption, Quiz } from '../types/QuizType.ts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleLeft } from '@fortawesome/free-solid-svg-icons'
-
-import quizData from '../data/questions.json'
-//import quizData from '../data/testData1.json'
-//import quizData from '../data/testData2.json'
+import fetchQuiz from '../openai-api.ts';
 
 type QuizInfo = {
   id: string;
@@ -63,15 +60,47 @@ const QuizSelectPage: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const goQuizPage = () => {
+  const createQuiz = async (): Promise<Quiz | null> => {
+    try {
+      if (!selectedQuiz || !difficulty || !questionCount || !questionType) {
+        throw new Error("필수 옵션이 누락되었습니다.");
+      }
+
+      const quizOption: QuizOption = {
+        topic: selectedQuiz,
+        difficulty: difficulty,
+        questionCount: questionCount,
+        questionType: questionType,
+      };
+
+      const quiz: Quiz = await fetchQuiz(quizOption);
+      return quiz;
+    } catch (error) {
+      console.error("퀴즈 생성 중 오류 발생:", error);
+      return null;
+    }
+  };
+
+  const goQuizPage = async () => {
+    if (isLoadingQuiz) return;
+
     setIsLoadingQuiz(true);
-    const timer = setTimeout(() => {
 
-      navigate('/quiz', { state: quizData });
-    }, 2000);
+    try {
+      const quiz = await createQuiz();
 
-    return () => clearTimeout(timer);
-  }
+      if (!quiz) {
+        console.warn("퀴즈 생성 실패.");
+        return;
+      }
+
+      navigate('/quiz', { state: quiz });
+    } catch (error) {
+      console.error("퀴즈 페이지로 이동 중 오류 발생:", error);
+    } finally {
+      setIsLoadingQuiz(false);
+    }
+  };
 
   const goHome = () => {
     navigate('/');
@@ -111,7 +140,7 @@ const QuizSelectPage: React.FC = () => {
               setQuestionCount={setQuestionCount}
               setQuestionType={setQuestionType}
               createQuiz={() => {
-                goQuizPage(); // 퀴즈 페이지로 이동
+                goQuizPage();
               }}
               onClose={handleCloseModal}
             />

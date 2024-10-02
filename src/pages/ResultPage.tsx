@@ -40,7 +40,6 @@ const ResultPage: React.FC = () => {
   const reuslt: Result = location.state;
   const comparison = checkCorrectAnswers(reuslt);
 
-  console.log(reuslt);
   const goHome = () => {
     navigate('/');
   };
@@ -63,7 +62,7 @@ const ResultPage: React.FC = () => {
                   {comparison[index]
                     ? <Answer $isCorrect={comparison[index]}>{data.userAnswer}</Answer>
                     : <div>
-                      <StrikeThrough>{data.userAnswer}</StrikeThrough>
+                      <StrikeThrough>{data.userAnswer}</StrikeThrough><br />
                       <Answer $isCorrect={comparison[index]}>{getAnswer(data.answer)}</Answer>
                     </div>
                   }
@@ -145,6 +144,7 @@ const TextWrapper = styled.div`
   margin-top: 0.5rem;
   display: grid;
   grid-template-columns: 1.5rem 1fr;
+  gap: 0.5rem;
 `
 
 const IndexText = styled.span`
@@ -156,17 +156,17 @@ const StrikeThrough = styled.span`
     color: ${colors.grayPale};
     font-size: 1rem;
     text-decoration: line-through;
+    margin-right: 8px;
 `;
 
 const Answer = styled.span<{ $isCorrect: boolean }>`
     color: ${(props) => (props.$isCorrect ? colors.green : colors.red)};
     font-size: 1rem;
-    margin-left: 8px;
     word-break: break-word;
     overflow-wrap: break-word; 
 `;
 
-const CommentaryText = styled.div`
+const CommentaryText = styled.span`
   font-size: 1rem;
   color: ${colors.grayDark};
   word-break: break-word;

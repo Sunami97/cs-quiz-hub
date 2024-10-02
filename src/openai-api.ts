@@ -61,6 +61,7 @@ const cleanResponse = (rawResponse: string): string => {
   }
   throw new Error("Given rawResponse has Invalid JSON format");
 };
+
 const createQuizPrompt = (
   quizOption: QuizOption,
   promptInterface: string
@@ -83,6 +84,7 @@ const createQuizPrompt = (
         ? `
       - **빈칸 채우기 문제의 경우**: 
       - 질문에는 반드시 빈칸(예: ___)을 포함해 주세요.
+      - 빈칸은 반드시 하나만 넣어주세요.
       - 대소문자를 구분하며, 완전히 동일한 단어는 중복하지 않습니다.
       - 의미가 동일한 단어(예: '자원'과 'resource', '인가'와 'Authorization')를 각각 개별 요소로 구분하여 **answers 배열**에 포함해 주세요. 예를 들어, "['자원', 'resource']"와 같이 입력.
       - JSON 형식에서는 한글과 영어로 된 정답을 분리해서 배열에 넣어 주세요. 동일한 의미를 가진 단어라도, 한글과 영어를 개별로 포함해 주세요.`
