@@ -210,6 +210,7 @@ const QuizItemContainer = styled.div`
 
     @media (max-width: 480px) {
       grid-template-columns: 1fr; 
+      row-gap: 48px; 
     }
   `;
 

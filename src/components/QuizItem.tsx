@@ -38,13 +38,17 @@ const QuizItem: React.FC<QuizProps> = ({ id, title, description, onClick }) => {
 
 const ItemWrap = styled.div`
   max-width: 282px;
-  text-align: center;
+  text-align: start;
   cursor: pointer;
   transition: transform 0.2s;
 
   &:hover {
     transform: scale(1.05);
   }
+
+  @media (max-width: 480px) {
+    text-align: center;
+    }
 `;
 
 const ItemImageWrap = styled.div`
@@ -62,7 +66,6 @@ const ItemImage = styled.img`
 `;
 
 const ItemTitle = styled.h2`
-  text-align: start;
   font-size: 1.5rem;
   margin-top: 16px;
   margin-bottom: 8px;
@@ -70,7 +73,6 @@ const ItemTitle = styled.h2`
 `;
 
 const ItemDescription = styled.p`
-  text-align: start;
   font-size: 1rem;
   color: ${colors.grayLighter};
 `;
