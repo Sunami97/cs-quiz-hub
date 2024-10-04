@@ -91,8 +91,8 @@ const QuizSelectPage: React.FC = () => {
 
   const goQuizPage = async () => {
     if (isLoadingQuiz) return;
-
     setIsLoadingQuiz(true);
+    isMounted.current = true;
 
     try {
       const quiz = await createQuiz();
