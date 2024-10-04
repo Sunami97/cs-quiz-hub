@@ -15,7 +15,7 @@ function App() {
         <Main>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/quiz-select" element={<QuizSelectPage />} />
+            <Route path="/select" element={<QuizSelectPage />} />
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/result" element={<ResultPage />} />
           </Routes>
@@ -32,6 +32,5 @@ const Main = styled.main`
     flex-direction: column;
     align-items: center;
     margin-top : 72px;
-    /* margin-bottom: 58px; */
   `;
 export default App;

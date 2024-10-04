@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   const startQuiz = () => {
-    navigate('/quiz-select');
+    navigate('/select');
   };
 
   return (
