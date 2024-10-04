@@ -126,6 +126,7 @@ const fetchQuiz = async (quizOption: QuizOption): Promise<Quiz> => {
     ],
     model: "gpt-3.5-turbo",
   });
+
   const rawResponse = completion.choices[0].message.content!;
   const response = cleanResponse(rawResponse);
   return JSON.parse(response);

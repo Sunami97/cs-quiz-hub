@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import QuizItem from '../components/QuizItem';
@@ -45,6 +45,7 @@ const QuizSelectPage: React.FC = () => {
   const [questionType, setQuestionType] = useState<QuestionType>('객관식');
 
   const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
+  const isMounted = useRef(true);
 
   const navigate = useNavigate();
 
@@ -59,6 +60,13 @@ const QuizSelectPage: React.FC = () => {
     setQuestionType('객관식')
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+      setIsLoadingQuiz(false);
+    };
+  }, []);
 
   const createQuiz = async (): Promise<Quiz | null> => {
     try {
@@ -94,7 +102,10 @@ const QuizSelectPage: React.FC = () => {
         return;
       }
 
-      navigate('/quiz', { state: quiz });
+      if (isMounted.current) {
+        navigate('/quiz', { state: quiz });
+      }
+
     } catch (error) {
       console.error("퀴즈 페이지로 이동 중 오류 발생:", error);
     } finally {
