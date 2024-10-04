@@ -165,10 +165,13 @@ const QuizSelectTopWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: start;
+    position: relative;
     margin-bottom: 25px;
 
     @media (max-width: 480px) {
+      margin-bottom: 32px;
       justify-content: center;
+      transform: translateX(-15px);
     }
   `;
 
@@ -176,9 +179,6 @@ const PrevButton = styled.div`
     cursor: pointer;
     color: ${colors.primary};
     font-size: 2.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin-right: 1rem;
     transition: transform 0.2s;
 
@@ -190,7 +190,6 @@ const PrevButton = styled.div`
 const QuizSelectTitle = styled.h2`
     font-size: 2rem;
     color: ${colors.grayDark};
-    text-align: start;
   `;
 
 const QuizItemContainer = styled.div`
