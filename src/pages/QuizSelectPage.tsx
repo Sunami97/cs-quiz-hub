@@ -38,6 +38,7 @@ const options: {
 }
 
 const QuizSelectPage: React.FC = () => {
+  console.log('로딩 퀴즈')
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<QuizTopic | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>('하');
@@ -121,7 +122,7 @@ const QuizSelectPage: React.FC = () => {
   return (
     <QuizSelectContainer>
       {isLoadingQuiz ? (
-        <LoadingQuiz />
+        <LoadingQuiz loadingText='퀴즈를 생성하고 있어요' />
       ) : (
         <QuizSelectWrapper>
           <QuizSelectTopWrapper>

@@ -1,7 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import { colors } from '../color';
 
-const LoadingQuiz = () => {
+type LoadingQuizProps = {
+  loadingText: string;
+};
+
+const LoadingQuiz: React.FC<LoadingQuizProps> = ({ loadingText }) => {
   return (
     <LoadingWrapper>
       <DotWrapper>
@@ -9,7 +13,7 @@ const LoadingQuiz = () => {
         <Dot />
         <Dot />
       </DotWrapper>
-      <CreateQuizText>퀴즈를 생성하고 있어요</CreateQuizText>
+      <CreateQuizText>{loadingText}</CreateQuizText>
     </LoadingWrapper>
   );
 };
