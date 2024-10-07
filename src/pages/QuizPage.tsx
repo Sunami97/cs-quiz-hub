@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProgressBar from '../components/ProgressBar';
 import styled from 'styled-components';
@@ -16,7 +16,7 @@ const QuizPage: React.FC = () => {
   const quizData: Quiz = location.state;
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const questionCount: number = quizData.Item.length;
+  const questionCount: number = useMemo(() => quizData?.Item && quizData?.Item.length || 0, [quizData]);
 
   const [selectedOption, setSelectedOption] = useState<string>('');
 
