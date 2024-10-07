@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import arrowDownIcon from '../assets/svg/arrow-down-svgrepo-com.svg'
+import arrowDownIcon from '../assets/arrow-down-svgrepo-com.svg'
 import { colors } from '../color';
 
 interface CustomSelectProps {
