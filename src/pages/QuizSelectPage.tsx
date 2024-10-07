@@ -38,7 +38,6 @@ const options: {
 }
 
 const QuizSelectPage: React.FC = () => {
-  console.log('로딩 퀴즈')
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<QuizTopic | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>('하');
