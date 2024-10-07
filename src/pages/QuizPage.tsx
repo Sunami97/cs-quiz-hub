@@ -13,8 +13,7 @@ import { Quiz, MultipleChoice } from '../types/QuizType'
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const quizData: Quiz = location.state;
-
+  const quizData: Quiz = useMemo(() => location.state, [location.state]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const questionCount: number = useMemo(() => quizData?.Item && quizData?.Item.length || 0, [quizData]);
 
@@ -80,7 +79,7 @@ const QuizPage: React.FC = () => {
   }
 
   const renderQuiz = (quiz: Quiz): JSX.Element => {
-    if (!quizData.Item) return <div>퀴즈 생성 중 문제가 발생했습니다. 다시 퀴즈를 생성해주세요.</div>
+    if (!quizData.Type) return <ErrorText>퀴즈 생성 중 문제가 발생했습니다. 다시 퀴즈를 생성해주세요.</ErrorText>
 
     switch (quiz.Type) {
       case "객관식":
@@ -127,21 +126,27 @@ const QuizPage: React.FC = () => {
 
   return (
     <QuizPageWrapper>
-      <QuizContent>
-        <ProgressContent>
-          <ProgressBar percentage={(currentQuestionIndex + 1) / questionCount * 100} />
-          <ProgressText>{currentQuestionIndex + 1}/{questionCount}</ProgressText>
-        </ProgressContent>
-        <QuestionWrapper>
-          <QuestionIndex>Q{currentQuestionIndex + 1}</QuestionIndex>
-          <QuestionText>{quizData.Item[currentQuestionIndex].question}</QuestionText>
-        </QuestionWrapper>
-        {renderQuiz(quizData)}
-      </QuizContent>
-      <ButtonWrapper>
-        <Button text='이전' color={colors.grayPale} onClick={prevQuestion} />
-        <Button text='다음' onClick={nextQuestion} disabled={selectedOption === ''} />
-      </ButtonWrapper>
+      {quizData.Item && quizData.Item.length > 0 ?
+        <>
+          <QuizContent>
+            <ProgressContent>
+              <ProgressBar percentage={(currentQuestionIndex + 1) / questionCount * 100} />
+              <ProgressText>{currentQuestionIndex + 1}/{questionCount}</ProgressText>
+            </ProgressContent>
+            <QuestionWrapper>
+              <QuestionIndex>Q{currentQuestionIndex + 1}</QuestionIndex>
+              <QuestionText>{quizData.Item[currentQuestionIndex].question}</QuestionText>
+            </QuestionWrapper>
+            {renderQuiz(quizData)}
+          </QuizContent>
+          <ButtonWrapper>
+            <Button text='이전' color={colors.grayPale} onClick={prevQuestion} />
+            <Button text='다음' onClick={nextQuestion} disabled={selectedOption === ''} />
+          </ButtonWrapper>
+        </>
+        :
+        <ErrorText>퀴즈 생성 중 문제가 발생했습니다. 다시 퀴즈를 생성해주세요.</ErrorText>
+      }
     </QuizPageWrapper>
   );
 };
@@ -154,6 +159,10 @@ const QuizPageWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+const ErrorText = styled.h2`
+  margin: auto;
+`
 
 const QuizContent = styled.div`
   width: calc(100% - 2rem);
