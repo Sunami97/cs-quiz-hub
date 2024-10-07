@@ -80,6 +80,8 @@ const QuizPage: React.FC = () => {
   }
 
   const renderQuiz = (quiz: Quiz): JSX.Element => {
+    if (!quizData.Item) return <div>퀴즈 생성 중 문제가 발생했습니다. 다시 퀴즈를 생성해주세요.</div>
+
     switch (quiz.Type) {
       case "객관식":
         return <OptionList>
