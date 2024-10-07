@@ -96,7 +96,7 @@ const createQuizPrompt = (
     문제는 반드시 아래의 인터페이스 구조에 맞추어 정답을 포함하고, 추가적인 설명이나 불필요한 텍스트는 출력하지 마세요. 정답에 대한 간단히 해설을 commentary 변수에 포함해 주세요.
     ${promptInterface}
 
-    아래 기준에 맞는 ${quizOption.questionCount}개의 ${quizOption.topic} 관련 ${quizOption.questionType} 문제를 난이도로 한국어로 생성해 주세요:
+    아래 기준에 맞는 ${quizOption.questionCount}개의 ${quizOption.topic} 관련 ${quizOption.questionType} 문제를 ${quizOption.difficulty} 난이도로 한국어로 생성해 주세요:
     - **난이도 설정**: ${quizOption.difficulty}
       - 하: 컴퓨터 공학을 학습한 비전공자가 풀 수 있을 정도의 쉬운 문제.
       - 중: 컴퓨터 공학 전공자가 관련 내용을 학습해야 풀 수 있는 문제.
