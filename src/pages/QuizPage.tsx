@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProgressBar from '../components/ProgressBar';
 import styled from 'styled-components';
@@ -14,8 +14,9 @@ const QuizPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const quizData: Quiz = useMemo(() => location.state, [location.state]);
+  const quizItems = useMemo(() => quizData.Item, [quizData]);
+  const questionCount = quizItems?.length || 0;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const questionCount: number = useMemo(() => quizData?.Item && quizData?.Item.length || 0, [quizData]);
 
   const [selectedOption, setSelectedOption] = useState<string>('');
 
@@ -28,7 +29,7 @@ const QuizPage: React.FC = () => {
     }
 
     const result = userAnswer.map((userAnswer, index) => {
-      const questionData = quizData.Item[index];
+      const questionData = quizItems[index];
 
       return {
         question: questionData.question,
@@ -39,24 +40,17 @@ const QuizPage: React.FC = () => {
     })
 
     navigate('/result', { state: result });
-  }, [isQuizFinished, navigate, quizData, userAnswer]);
+  }, [isQuizFinished, navigate, quizData, quizItems, userAnswer]);
 
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && selectedOption !== '') {
-      nextQuestion();
-    }
-  };
-
-  const addAnswer = () => {
+  const addAnswer = useCallback(() => {
     setUserAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers];
       updatedAnswers[currentQuestionIndex] = selectedOption;
       return updatedAnswers;
     });
-  };
+  }, [currentQuestionIndex, selectedOption]);
 
-  const nextQuestion = () => {
+  const nextQuestion = useCallback(() => {
     addAnswer();
 
     if (currentQuestionIndex + 1 >= questionCount) {
@@ -66,9 +60,9 @@ const QuizPage: React.FC = () => {
 
     setSelectedOption('');
     setCurrentQuestionIndex(currentQuestionIndex + 1);
-  };
+  }, [addAnswer, currentQuestionIndex, questionCount]);
 
-  const prevQuestion = () => {
+  const prevQuestion = useCallback(() => {
     if (currentQuestionIndex === 0) {
       return;
     }
@@ -76,15 +70,21 @@ const QuizPage: React.FC = () => {
     const prevIndex = currentQuestionIndex - 1;
     setSelectedOption(userAnswer[prevIndex]);
     setCurrentQuestionIndex(prevIndex);
-  }
+  }, [currentQuestionIndex, userAnswer]);
 
-  const renderQuiz = (quiz: Quiz): JSX.Element => {
+  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && selectedOption !== '') {
+      nextQuestion();
+    }
+  }, [nextQuestion, selectedOption]);
+
+  const renderQuiz = useCallback((): JSX.Element => {
     if (!quizData.Type) return <ErrorText>퀴즈 생성 중 문제가 발생했습니다. 다시 퀴즈를 생성해주세요.</ErrorText>
 
-    switch (quiz.Type) {
+    switch (quizData.Type) {
       case "객관식":
         return <OptionList>
-          {(quizData.Item as MultipleChoice[])[currentQuestionIndex].options.map((option, index) => (
+          {(quizItems as MultipleChoice[])[currentQuestionIndex].options.map((option, index) => (
             <OptionContainer
               key={index}
               $isSelected={option === selectedOption}
@@ -122,11 +122,11 @@ const QuizPage: React.FC = () => {
       default:
         return <p>Invalid quiz type</p>;
     }
-  };
+  }, [currentQuestionIndex, handleKeyDown, quizData.Type, quizItems, selectedOption]);
 
   return (
     <QuizPageWrapper>
-      {quizData.Item && quizData.Item.length > 0 ?
+      {quizItems?.length > 0 ?
         <>
           <QuizContent>
             <ProgressContent>
@@ -135,9 +135,9 @@ const QuizPage: React.FC = () => {
             </ProgressContent>
             <QuestionWrapper>
               <QuestionIndex>Q{currentQuestionIndex + 1}</QuestionIndex>
-              <QuestionText>{quizData.Item[currentQuestionIndex].question}</QuestionText>
+              <QuestionText>{quizItems[currentQuestionIndex].question}</QuestionText>
             </QuestionWrapper>
-            {renderQuiz(quizData)}
+            {renderQuiz()}
           </QuizContent>
           <ButtonWrapper>
             <Button text='이전' color={colors.grayPale} onClick={prevQuestion} />

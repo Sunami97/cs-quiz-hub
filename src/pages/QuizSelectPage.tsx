@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import QuizItem from '../components/QuizItem';
@@ -49,17 +49,17 @@ const QuizSelectPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleQuizSelect = (quizTopic: QuizTopic) => {
+  const handleQuizSelect = useCallback((quizTopic: QuizTopic) => {
     setSelectedQuiz(quizTopic);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setDifficulty('하');
     setQuestionCount('5');
     setQuestionType('객관식')
     setIsModalOpen(false);
-  };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -68,7 +68,7 @@ const QuizSelectPage: React.FC = () => {
     };
   }, []);
 
-  const createQuiz = async (): Promise<Quiz | null> => {
+  const createQuiz = useCallback(async (): Promise<Quiz | null> => {
     try {
       if (!selectedQuiz || !difficulty || !questionCount || !questionType) {
         throw new Error("필수 옵션이 누락되었습니다.");
@@ -87,9 +87,9 @@ const QuizSelectPage: React.FC = () => {
       console.error("퀴즈 생성 중 오류 발생:", error);
       return null;
     }
-  };
+  }, [difficulty, questionCount, questionType, selectedQuiz]);
 
-  const goQuizPage = async () => {
+  const goQuizPage = useCallback(async () => {
     if (isLoadingQuiz) return;
     setIsLoadingQuiz(true);
     isMounted.current = true;
@@ -111,11 +111,11 @@ const QuizSelectPage: React.FC = () => {
     } finally {
       setIsLoadingQuiz(false);
     }
-  };
+  }, [createQuiz, isLoadingQuiz, navigate]);
 
-  const goHome = () => {
+  const goHome = useCallback(() => {
     navigate('/');
-  };
+  }, [navigate]);
 
 
   return (
