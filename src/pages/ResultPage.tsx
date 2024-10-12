@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { colors } from '../color';
@@ -11,38 +11,40 @@ type Result = {
   commentary: string;
 }[]
 
-const checkCorrectAnswers = (result: Result): boolean[] => {
-  return result.map((res) => {
-    let isCorrect = false;
-
-    if (typeof res.answer === "string") {
-      isCorrect = res.answer.trim().toLowerCase() === res.userAnswer.trim().toLowerCase();
-    } else if (Array.isArray(res.answer)) {
-      isCorrect = res.answer.some((ans) => ans.trim().toLowerCase() === res.userAnswer.trim().toLowerCase());
-    }
-
-    return isCorrect;
-  })
-}
-const getAnswer = (answer: string | string[]): string => {
-  if (typeof answer === "string") {
-    return answer;
-  } else if (Array.isArray(answer)) {
-    return answer.join(' / ');
-  } else {
-    return 'error';
-  }
-}
-
 const ResultPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const reuslt: Result = location.state;
-  const comparison = checkCorrectAnswers(reuslt);
+  const result: Result = location.state;
 
-  const goHome = () => {
+  const checkCorrectAnswers = useCallback((result: Result): boolean[] => {
+    return result.map((res) => {
+      let isCorrect = false;
+
+      if (typeof res.answer === "string") {
+        isCorrect = res.answer.trim().toLowerCase() === res.userAnswer.trim().toLowerCase();
+      } else if (Array.isArray(res.answer)) {
+        isCorrect = res.answer.some((ans) => ans.trim().toLowerCase() === res.userAnswer.trim().toLowerCase());
+      }
+
+      return isCorrect;
+    })
+  }, [])
+
+  const getAnswer = useCallback((answer: string | string[]): string => {
+    if (typeof answer === "string") {
+      return answer;
+    } else if (Array.isArray(answer)) {
+      return answer.join(' / ');
+    } else {
+      return 'error';
+    }
+  }, []);
+
+  const goHome = useCallback(() => {
     navigate('/');
-  };
+  }, [navigate]);
+
+  const comparison = useMemo(() => checkCorrectAnswers(result), [result, checkCorrectAnswers]);
 
   return (
     <ResultWrapper>
@@ -50,7 +52,7 @@ const ResultPage: React.FC = () => {
         <Title>퀴즈 결과</Title>
         <ResultText>{comparison.length}문제 중 {comparison.filter((comparison) => comparison).length}문제 맞히셨습니다.</ResultText>
         <CommentaryListWrapper>
-          {reuslt.map((data, index: number) => {
+          {result.map((data, index: number) => {
             return <CommentaryItem key={index} $isCorrect={comparison[index]}>
               <CommentaryItemTextWrapper>
                 <TextWrapper>
