@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProgressBar from '../components/ProgressBar';
 import styled from 'styled-components';
@@ -13,8 +13,8 @@ import { Quiz, MultipleChoice } from '../types/QuizType'
 const QuizPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const quizData: Quiz = useMemo(() => location.state, [location.state]);
-  const quizItems = useMemo(() => quizData.Item, [quizData]);
+  const quizData: Quiz = location.state;
+  const quizItems = quizData.Item;
   const questionCount = quizItems?.length || 0;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -78,7 +78,7 @@ const QuizPage: React.FC = () => {
     }
   }, [nextQuestion, selectedOption]);
 
-  const renderQuiz = useCallback((): JSX.Element => {
+  const renderQuiz = useMemo((): JSX.Element => {
     if (!quizData.Type) return <ErrorText>퀴즈 생성 중 문제가 발생했습니다. 다시 퀴즈를 생성해주세요.</ErrorText>
 
     switch (quizData.Type) {
@@ -137,7 +137,7 @@ const QuizPage: React.FC = () => {
               <QuestionIndex>Q{currentQuestionIndex + 1}</QuestionIndex>
               <QuestionText>{quizItems[currentQuestionIndex].question}</QuestionText>
             </QuestionWrapper>
-            {renderQuiz()}
+            {renderQuiz}
           </QuizContent>
           <ButtonWrapper>
             <Button text='이전' color={colors.grayPale} onClick={prevQuestion} />
